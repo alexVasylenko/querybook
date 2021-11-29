@@ -49,7 +49,7 @@ export const SchemaTableView: React.FunctionComponent<{
     });
 
     return (
-        <SchemasList>
+        <SchemasList aria-label="schemas-list" style={{ height: "100px"}}>
             {schemas.schemaIds.map((schemaId) => {
                 const schema = schemas.schemaResultById[schemaId];
                 const schemaSortOrder =

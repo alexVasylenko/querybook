@@ -76,6 +76,7 @@ export const SchemaTableItem: React.FC<{
             <StyledItem className="horizontal-space-between navigator-header pl8">
                 <div
                     className="flex1 flex-row"
+                    aria-label={`expand-table-${name}`}
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
                     <Title size={7}>{name}</Title>
@@ -103,7 +104,7 @@ export const SchemaTableItem: React.FC<{
             </StyledItem>
 
             {isExpanded && (
-                <div className="board-scroll-wrapper">
+                <div aria-label={`list-of-schema-${name}`} className="board-scroll-wrapper">
                     {total === 0 ? (
                         <div className="ph12">No items in this section.</div>
                     ) : (

@@ -1,0 +1,8 @@
+{
+    "component": {
+        "componentFolder": "cypress",
+        "testFiles": "**/*.test.{js,jsx,ts,tsx}"
+    },
+    "nodeVersion": "system",
+    "ignoreTestFiles": ["**/__snapshots__/*", "**/__image_snapshots__/*"]
+}

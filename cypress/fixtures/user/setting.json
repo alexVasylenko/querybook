@@ -1,0 +1,13 @@
+{
+    "data": [
+        {
+            "key": "show_full_view",
+            "value": "enabled"
+        },
+        {
+            "key": "theme",
+            "value": "default"
+        }
+    ],
+    "host": "ec8952c07f85"
+}

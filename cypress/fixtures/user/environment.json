@@ -1,0 +1,28 @@
+{
+    "data": [
+        [
+            {
+                "deleted_at": null,
+                "description": "Demo environment",
+                "hidden": false,
+                "id": 1,
+                "image": "",
+                "name": "demo_environment",
+                "public": true,
+                "shareable": true
+            },
+            {
+                "deleted_at": null,
+                "description": "",
+                "hidden": false,
+                "id": 2,
+                "image": "",
+                "name": "test",
+                "public": true,
+                "shareable": true
+            }
+        ],
+        [1, 2]
+    ],
+    "host": "ec8952c07f85"
+}

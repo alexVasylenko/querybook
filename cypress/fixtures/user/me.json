@@ -1,0 +1,15 @@
+{
+    "data": {
+        "info": {
+            "deleted": false,
+            "email": "vasilenko131@gmail.com",
+            "fullname": null,
+            "id": 1,
+            "profile_img": null,
+            "roles": [0],
+            "username": "Alex"
+        },
+        "uid": 1
+    },
+    "host": "ec8952c07f85"
+}

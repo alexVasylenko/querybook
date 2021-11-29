@@ -88,6 +88,7 @@ function getDevServerSettings(env) {
 }
 
 module.exports = (env, options) => {
+    console.log(env, options, "options");
     const PROD = ((env && env.NODE_ENV) || options.mode) === 'production';
     const mode = PROD ? 'production' : 'development';
 
@@ -131,7 +132,7 @@ module.exports = (env, options) => {
         output: {
             filename: '[name].[fullhash].js',
             path: OUTPUT_PATH,
-            publicPath: '/build/',
+            publicPath: env && env.ise2e ? '/' : '/build/',
             clean: true,
         },
 
