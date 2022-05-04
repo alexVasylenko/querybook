@@ -73,15 +73,28 @@ class ModelEntry(ScheduleEntry):
         update_task_schedule(model.id, enabled=False, no_changes=True)
 
     def is_due(self):
+        print(self.model.recurrences)
         if not self.model.enabled:
             return schedules.schedstate(False, 5.0)  # 5 second delay for re-enable.
 
         if self.model.start_time is not None:
             now = self._default_now()
+            print(now < self.model.start_time)
             if now < self.model.start_time:
                 delay = math.ceil((self.model.start_time - now).total_seconds())
                 return schedules.schedstate(False, delay)
+        
+        if self.model.end_time is not None:
+            now = self._default_now()
+            if now > self.model.end_time:
+                self._disable(self.model)
+                return schedules.schedstate(False, 99999999999)
 
+        if self.model.recurrences is not None and self.model.recurrences > 0:
+            if self.model.recurrences == self.model.total_run_count:
+                self._disable(self.model)
+                return schedules.schedstate(False, 99999999999)
+                
         return self.schedule.is_due(self.last_run_at)
 
     def _default_now(self):

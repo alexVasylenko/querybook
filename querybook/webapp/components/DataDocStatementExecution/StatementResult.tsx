@@ -112,6 +112,7 @@ export const StatementResult: React.FC<IProps> = ({
         visualizationDOM = <Loading />;
     } else {
         const { data, failed, error } = statementResult;
+        console.log(data, "1");
         if (failed) {
             return <StatementResultWithError error={error} />;
         }

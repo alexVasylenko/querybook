@@ -50,6 +50,7 @@ export const Button = React.forwardRef<HTMLSpanElement, ButtonProps>(
             ping = null,
             ...elementProps
         } = props;
+        console.log(className, "className");
 
         const iconDOM = isLoading ? (
             <Icon name="Loading" />

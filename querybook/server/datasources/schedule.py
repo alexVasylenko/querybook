@@ -17,7 +17,7 @@ from models.schedule import TaskSchedule
 @admin_only
 @with_admin_audit_log(AdminItemType.Task, AdminOperation.CREATE)
 def create_task_schedule(
-    cron, name, task, task_type, enabled, args=None, kwargs=None, options=None,
+    cron, name, task, task_type, enabled, start_time=None, recurrences=None, end_time=None, args=None, kwargs=None, options=None,
 ):
     with DBSession() as session:
         api_assert(validate_cron(cron), "Invalid cron expression")
@@ -31,6 +31,9 @@ def create_task_schedule(
             task_type=task_type,
             options=options,
             enabled=enabled,
+            start_time=start_time,
+            end_time=end_time,
+            recurrences=recurrences,
             session=session,
         )
 

@@ -54,6 +54,8 @@ class TaskSchedule(CRUDMixin, Base):
     # schedule time setting
     cron = sql.Column(sql.String(length=name_length), default="* * * * *")
     start_time = sql.Column(sql.DateTime, nullable=True)
+    end_time = sql.Column(sql.DateTime, nullable=True)
+    recurrences = sql.Column(sql.Integer, nullable=True)
 
     args = sql.Column(sql.JSON, default=[])
     kwargs = sql.Column(sql.JSON, default={})

@@ -130,10 +130,20 @@ export const DataDocAccessRequestResource = {
 export const DataDocScheduleResource = {
     get: (docId: number) =>
         ds.fetch<IDataDocTaskSchedule>(`/datadoc/${docId}/schedule/`),
-    create: (docId: number, cron: string, kwargs: IDataDocScheduleKwargs) =>
+    create: (
+        docId: number,
+        cron: string,
+        kwargs: IDataDocScheduleKwargs,
+        startTime: number,
+        endTime: number,
+        recurrences: boolean
+    ) =>
         ds.save<IDataDocTaskSchedule>(`/datadoc/${docId}/schedule/`, {
             cron,
             kwargs,
+            start_time: startTime,
+            end_time: endTime,
+            recurrences,
         }),
     update: (
         docId: number,
@@ -142,7 +152,10 @@ export const DataDocScheduleResource = {
             kwargs?: IDataDocScheduleKwargs;
             enabled?: boolean;
         }
-    ) => ds.update<IDataDocTaskSchedule>(`/datadoc/${docId}/schedule/`, params),
+    ) => ds.update<IDataDocTaskSchedule>(
+            `/datadoc/${docId}/schedule/`,
+            params
+        ),
     delete: (docId: number) => ds.delete(`/datadoc/${docId}/schedule/`),
 
     run: (docId: number) => ds.save<null>(`/datadoc/${docId}/schedule/run/`),

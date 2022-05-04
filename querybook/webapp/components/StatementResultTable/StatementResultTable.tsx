@@ -108,6 +108,8 @@ export const StatementResultTable: React.FunctionComponent<{
         filterConditionByColumn,
     } = useFilterCell(rows);
 
+    // console.log(expandedColumn, data[0]);
+
     const columns = data[0].map((column, index) => ({
         Header: () => (
             <StatementResultTableColumn

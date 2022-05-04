@@ -34,6 +34,9 @@ import { notificationServiceSelector } from '../../redux/notificationService/sel
 import { SoftButton } from 'ui/Button/Button';
 import { IconButton } from 'ui/Button/IconButton';
 
+import moment from 'moment';
+import { ExecutionRangeField } from '../ExecutionRangeField/ExecutionRangeField';
+
 interface IDataDocScheduleFormProps {
     isEditable: boolean;
     docId: number;
@@ -85,6 +88,10 @@ interface IScheduleFormValues {
     };
 }
 
+function formatDate(value) {
+    return value ? moment.utc(value, 'X') : null;
+}
+
 export const DataDocScheduleForm: React.FunctionComponent<IDataDocScheduleFormProps> = ({
     isEditable,
 
@@ -92,6 +99,9 @@ export const DataDocScheduleForm: React.FunctionComponent<IDataDocScheduleFormPr
     cron,
     enabled,
     kwargs,
+    startTime,
+    endTime,
+    recurrences,
 
     onCreate,
     onUpdate,
@@ -112,6 +122,9 @@ export const DataDocScheduleForm: React.FunctionComponent<IDataDocScheduleFormPr
                   notify_on: NotifyOn.ALL,
                   exports: [],
               },
+              start_time: startTime,
+              end_time: endTime,
+              recurrences: recurrences,
           }
         : {
               recurrence,
@@ -121,6 +134,9 @@ export const DataDocScheduleForm: React.FunctionComponent<IDataDocScheduleFormPr
                   notify_on: kwargs.notify_on,
                   exports: kwargs.exports,
               },
+              start_time: startTime,
+              end_time: endTime,
+              recurrences: recurrences,
           };
 
     return (
@@ -139,9 +155,22 @@ export const DataDocScheduleForm: React.FunctionComponent<IDataDocScheduleFormPr
                 }
 
                 if (isCreateForm) {
-                    await onCreate(cronRepr, values.kwargs);
+                    await onCreate(
+                        cronRepr,
+                        values.kwargs,
+                        formatDate(values.start_time),
+                        formatDate(values.end_time),
+                        values.recurrences
+                    );
                 } else {
-                    await onUpdate(cronRepr, values.enabled, values.kwargs);
+                    await onUpdate(
+                        cronRepr,
+                        values.enabled,
+                        values.kwargs,
+                        formatDate(values.start_time),
+                        formatDate(values.end_time),
+                        values.recurrences
+                    );
                 }
             }}
         >
@@ -152,6 +181,7 @@ export const DataDocScheduleForm: React.FunctionComponent<IDataDocScheduleFormPr
                 setFieldValue,
                 isValid,
                 dirty,
+                setValues,
             }) => {
                 const enabledField = !isCreateForm && (
                     <SimpleField label="Enabled" name="enabled" type="toggle" />
@@ -226,6 +256,25 @@ export const DataDocScheduleForm: React.FunctionComponent<IDataDocScheduleFormPr
                         <FormWrapper minLabelWidth="180px" size={7}>
                             <Form>
                                 <DisabledSection disabled={!isEditable}>
+                                    <ExecutionRangeField
+                                        values={{
+                                            endTime: values.end_time,
+                                            startTime: values.start_time,
+                                            recurrences: values.recurrences,
+                                        }}
+                                        updateValues={({
+                                            endTime,
+                                            startTime,
+                                            recurrences,
+                                        }) => {
+                                            setValues({
+                                                ...values,
+                                                end_time: endTime,
+                                                start_time: startTime,
+                                                recurrences,
+                                            });
+                                        }}
+                                    />
                                     <RecurrenceEditor
                                         recurrence={values.recurrence}
                                         recurrenceError={errors?.recurrence}

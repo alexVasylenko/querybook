@@ -1,5 +1,6 @@
 import React from 'react';
 import toast from 'react-hot-toast';
+import moment from 'moment';
 
 import { useResource } from 'hooks/useResource';
 import { DataDocScheduleResource } from 'resource/dataDoc';
@@ -48,22 +49,52 @@ export const DataDocScheduleFormWrapper: React.FunctionComponent<IDataDocSchedul
                 cron={data?.cron ?? null}
                 enabled={data?.enabled ?? false}
                 kwargs={data?.kwargs ?? {}}
-                onCreate={(cron, kwargs) =>
-                    DataDocScheduleResource.create(docId, cron, kwargs).then(
-                        () => {
-                            toast.success('Schedule Created!');
-                            forceFetch();
-                            if (onSave) {
-                                onSave();
-                            }
+                startTime={data?.start_time}
+                endTime={data?.end_time}
+                recurrences={data?.recurrences}
+                onCreate={(cron, kwargs, startTime, endTime, recurrences) =>
+                    DataDocScheduleResource.create(
+                        docId,
+                        cron,
+                        kwargs,
+                        startTime
+                            ? moment(startTime, 'X').format(
+                                  'YYYY-MM-DD HH:mm:ss'
+                              )
+                            : null,
+                        endTime
+                            ? moment(endTime, 'X').format('YYYY-MM-DD HH:mm:ss')
+                            : null,
+                        recurrences
+                    ).then(() => {
+                        toast.success('Schedule Created!');
+                        forceFetch();
+                        if (onSave) {
+                            onSave();
                         }
-                    )
+                    })
                 }
-                onUpdate={(cron, enabled, kwargs) =>
+                onUpdate={(
+                    cron,
+                    enabled,
+                    kwargs,
+                    startTime,
+                    endTime,
+                    recurrences
+                ) =>
                     DataDocScheduleResource.update(docId, {
                         cron,
                         enabled,
                         kwargs,
+                        start_time: startTime
+                            ? moment(startTime, 'X').format(
+                                  'YYYY-MM-DD HH:mm:ss'
+                              )
+                            : null,
+                        end_time: endTime
+                            ? moment(endTime, 'X').format('YYYY-MM-DD HH:mm:ss')
+                            : null,
+                        recurrences: recurrences,
                     }).then(() => {
                         toast.success('Schedule Updated!');
                         forceFetch();
