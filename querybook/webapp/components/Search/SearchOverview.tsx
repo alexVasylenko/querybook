@@ -56,6 +56,7 @@ import {
     QueryItem,
 } from './SearchResultItem';
 import { TableSelect } from './TableSelect';
+import { SearchSchemaSelect } from './SearchSchemaSelect';
 
 import './SearchOverview.scss';
 
@@ -621,6 +622,13 @@ export const SearchOverview: React.FunctionComponent = () => {
                             )}
                         />
                     </div>
+                </div>
+                <div className="search-filter">
+                    <span className="filter-title">Schemas</span>
+                    <SearchSchemaSelect
+                        updateSearchFilter={updateSearchFilter}
+                        schema={searchFilters?.schema}
+                    />
                 </div>
                 <div className="search-filter">
                     <span className="filter-title">Date</span>
