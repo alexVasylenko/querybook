@@ -697,6 +697,7 @@ export const SearchOverview: React.FunctionComponent = () => {
                                     unit="result"
                                 />
                             </span>
+                            <span><input type="number" /></span>
                             <span>{orderByDOM}</span>
                         </>
                     ) : (

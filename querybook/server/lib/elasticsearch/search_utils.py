@@ -6,6 +6,7 @@ LOG = get_logger(__file__)
 
 
 def _parse_results(results, get_count):
+    print(" -- --- --- --- RET START -- --- --- ---")
     hits = results.get("hits", {})
     ret = []
     elements = hits.get("hits", [])
@@ -13,9 +14,16 @@ def _parse_results(results, get_count):
         r = element.get("_source", {})
         if element.get("highlight"):
             r.update({"highlight": element.get("highlight")})
+
+
+        print(r.get("query_text"), "-- --- -- if query_text -- -- --- ---")
+        #if r.get("query_text"):
+        #    r.update({"query_text": "\n".join(r.get("query_text").split("\n")[0:3])})
+
         ret.append(r)
 
     if get_count:
+        print(ret, "-- --- --- --- ret --- --- ----")
         total_found = hits.get("total", {}).get("value", 0)
         return ret, total_found
 
@@ -32,6 +40,7 @@ def get_matching_objects(query: Union[str, Dict], index_name, get_count=False):
     if result is None:
         LOG.debug("No Elasticsearch attempt succeeded")
         result = {}
+    print('some -- --- ---- ||| --- --- ---')    
     return _parse_results(result, get_count)
 
 

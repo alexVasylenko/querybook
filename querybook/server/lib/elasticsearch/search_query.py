@@ -88,4 +88,5 @@ def construct_query_search_query(
         )
     )
 
+    print(query, "--- --- query --- --- ---")
     return query

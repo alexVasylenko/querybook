@@ -71,7 +71,7 @@ export const CodeHighlight: React.FC<ICodeHighlightProps> = ({
         const { text, className: tokenClassName } = token;
 
         return (
-            <span className={tokenClassName} key={index}>
+            <span data-test="some" className={tokenClassName} key={index}>
                 {text}
             </span>
         );
