@@ -88,11 +88,48 @@ interface IQueryItemProps {
     environmentName: string;
 }
 
+const GetSyntaxHighlightedQueryDOM = ({
+    queryText,
+    stopPropagation,
+    displayLines,
+    displayPreview,
+}) => {
+    const [isDisplayFull, setIsDisplayFull] = useState(false);
+    console.log(displayLines, '-- --- --- display Lines -- --- ---');
+    // if empty - show full query
+    const text = isDisplayFull
+        ? queryText
+        : displayLines
+        ? queryText.split('\n').slice(0, displayLines).join('\n')
+        : queryText;
+    return (
+        <>
+            <ThemedCodeHighlight
+                className="result-item-query"
+                value={text}
+                onClick={stopPropagation}
+                onContextMenuCapture={stopPropagation}
+            />
+            {displayLines ? <div style={{ textAlign: "center" }} onClick={() => setIsDisplayFull((v) => !v)}>
+                {isDisplayFull ? 'Hide more' : 'Show more'}{' '}
+                <Icon
+                    className="ml8"
+                    name={isDisplayFull ? 'ChevronUp' : 'ChevronDown'}
+                    size={16}
+                />
+            </div> : ""}
+        </>
+    );
+};
+
 export const QueryItem: React.FunctionComponent<IQueryItemProps> = ({
     preview,
     environmentName,
     searchString,
+    displayLines,
+    displayPreview,
 }) => {
+    console.log(' -- --- -- is display preview -- --- --- ', displayPreview);
     const {
         author_uid: authorUid,
         created_at: createdAt,
@@ -105,6 +142,10 @@ export const QueryItem: React.FunctionComponent<IQueryItemProps> = ({
 
     const [isQueryTextExpanded, setIsQueryTextExpanded] = useState(false);
     const isQueryCell = preview.query_type === 'query_cell';
+
+    React.useEffect(() => {
+        setIsQueryTextExpanded(!displayPreview);
+    }, [displayPreview]);
 
     const url = isQueryCell
         ? `/${environmentName}/datadoc/${preview.data_doc_id}/?cellId=${id}`
@@ -135,12 +176,15 @@ export const QueryItem: React.FunctionComponent<IQueryItemProps> = ({
     const queryTextHighlightedContent = preview.highlight?.query_text;
 
     const getSyntaxHighlightedQueryDOM = () => (
-        <ThemedCodeHighlight
-            className="result-item-query"
-            value={queryText}
-            onClick={stopPropagation}
-            onContextMenuCapture={stopPropagation}
-        />
+        <>
+            <ThemedCodeHighlight
+                className="result-item-query"
+                value={queryText.split('\n').slice(0, 3).join('\n')}
+                onClick={stopPropagation}
+                onContextMenuCapture={stopPropagation}
+            />
+            <div>Display full</div>
+        </>
     );
 
     const getSearchResultHighlightedQueryDOM = () => (
@@ -158,6 +202,7 @@ export const QueryItem: React.FunctionComponent<IQueryItemProps> = ({
                     setIsQueryTextExpanded((isExpaneded) => !isExpaneded)
                 }
             />
+
             {!isQueryTextExpanded ? (
                 <span
                     dangerouslySetInnerHTML={{
@@ -167,7 +212,12 @@ export const QueryItem: React.FunctionComponent<IQueryItemProps> = ({
                     }}
                 />
             ) : (
-                getSyntaxHighlightedQueryDOM()
+                <GetSyntaxHighlightedQueryDOM
+                    queryText={queryText}
+                    stopPropagation={stopPropagation}
+                    displayLines={displayLines}
+                    displayPreview={displayPreview}
+                />
             )}
         </div>
     );

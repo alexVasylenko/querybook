@@ -230,6 +230,9 @@ export const SearchOverview: React.FunctionComponent = () => {
         mapQueryParamToState();
     }, []);
 
+    const [displayLines, setDisplayLines] = React.useState('');
+    const [displayPreview, setDisplayPreview] = React.useState(true);
+
     const searchTypeDOM = (
         <div className="search-types mv4">
             <Tabs
@@ -338,6 +341,8 @@ export const SearchOverview: React.FunctionComponent = () => {
                       key={`${result.query_type}-${result.id}`}
                       preview={result}
                       environmentName={environment.name}
+                      displayLines={displayLines}
+                      displayPreview={displayPreview}
                   />
               ))
             : searchType === SearchType.DataDoc
@@ -697,8 +702,53 @@ export const SearchOverview: React.FunctionComponent = () => {
                                     unit="result"
                                 />
                             </span>
-                            <span><input type="number" /></span>
-                            <span>{orderByDOM}</span>
+                            <span className="horizontal-space-between">
+                                <Dropdown
+                                    layout={['bottom', 'right']}
+                                    customButtonRenderer={() => {
+                                        return (
+                                            <>
+                                                <div>
+                                                    Preview:{' '}
+                                                    {displayPreview
+                                                        ? 'show'
+                                                        : 'hidden'}
+                                                    {displayLines
+                                                        ? `, Lines: ${displayLines}`
+                                                        : ''}
+                                                </div>
+                                                <Icon
+                                                    className="ml8"
+                                                    name="ChevronDown"
+                                                    size={16}
+                                                />
+                                            </>
+                                        );
+                                    }}
+                                >
+                                    <div style={{ backgroundColor: '#fff', padding: "12px" }}>
+                                        <div className="horizontal-space-between mb12">
+                                            <span>Lines: </span>
+                                            <NumberInput
+                                                value={displayLines}
+                                                onChange={(lines) => {
+                                                    setDisplayLines(+lines);
+                                                }}
+                                                min="0"
+                                            />
+                                        </div>
+                                        <Checkbox
+                                            title="Display preview"
+                                            value={displayPreview}
+                                            onChange={(checked) => {
+                                                console.log(checked);
+                                                setDisplayPreview(checked);
+                                            }}
+                                        />
+                                    </div>
+                                </Dropdown>
+                                {orderByDOM}
+                            </span>
                         </>
                     ) : (
                         beginSearchPromptDOM
