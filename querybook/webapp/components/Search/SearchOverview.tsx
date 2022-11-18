@@ -230,8 +230,8 @@ export const SearchOverview: React.FunctionComponent = () => {
         mapQueryParamToState();
     }, []);
 
-    const [displayLines, setDisplayLines] = React.useState('');
-    const [displayPreview, setDisplayPreview] = React.useState(true);
+    const [displayLines, setDisplayLines] = React.useState<number>(null);
+    const [displayPreview, setDisplayPreview] = React.useState<boolean>(true);
 
     const searchTypeDOM = (
         <div className="search-types mv4">
@@ -302,10 +302,18 @@ export const SearchOverview: React.FunctionComponent = () => {
                 {searchOrder === SearchOrder.Recency
                     ? 'Most recent'
                     : 'Most relevant'}
+                {!displayPreview ? (
+                    <div className="ml12">
+                        Preview: hidden
+                        {displayLines ? `, Lines: ${displayLines}` : ''}
+                    </div>
+                ) : (
+                    ''
+                )}
                 <Icon className="ml8" name="ChevronDown" size={16} />
             </div>
         ),
-        [searchOrder]
+        [searchOrder, displayPreview, displayLines]
     );
 
     const orderByDOM = (
@@ -329,6 +337,26 @@ export const SearchOverview: React.FunctionComponent = () => {
                 )}
                 type="select"
             />
+            <div className="p12 Menu">
+                <div className="horizontal-space-between mb12">
+                    <span>Lines: </span>
+                    <NumberInput
+                        className="ml8"
+                        value={displayLines}
+                        onChange={(lines) => {
+                            setDisplayLines(+lines);
+                        }}
+                        min="0"
+                    />
+                </div>
+                <Checkbox
+                    title="Display preview"
+                    value={displayPreview}
+                    onChange={(checked) => {
+                        setDisplayPreview(checked);
+                    }}
+                />
+            </div>
         </Dropdown>
     );
 
@@ -702,53 +730,7 @@ export const SearchOverview: React.FunctionComponent = () => {
                                     unit="result"
                                 />
                             </span>
-                            <span className="horizontal-space-between">
-                                <Dropdown
-                                    layout={['bottom', 'right']}
-                                    customButtonRenderer={() => {
-                                        return (
-                                            <>
-                                                <div>
-                                                    Preview:{' '}
-                                                    {displayPreview
-                                                        ? 'show'
-                                                        : 'hidden'}
-                                                    {displayLines
-                                                        ? `, Lines: ${displayLines}`
-                                                        : ''}
-                                                </div>
-                                                <Icon
-                                                    className="ml8"
-                                                    name="ChevronDown"
-                                                    size={16}
-                                                />
-                                            </>
-                                        );
-                                    }}
-                                >
-                                    <div style={{ backgroundColor: '#fff', padding: "12px" }}>
-                                        <div className="horizontal-space-between mb12">
-                                            <span>Lines: </span>
-                                            <NumberInput
-                                                value={displayLines}
-                                                onChange={(lines) => {
-                                                    setDisplayLines(+lines);
-                                                }}
-                                                min="0"
-                                            />
-                                        </div>
-                                        <Checkbox
-                                            title="Display preview"
-                                            value={displayPreview}
-                                            onChange={(checked) => {
-                                                console.log(checked);
-                                                setDisplayPreview(checked);
-                                            }}
-                                        />
-                                    </div>
-                                </Dropdown>
-                                {orderByDOM}
-                            </span>
+                            <span>{orderByDOM}</span>
                         </>
                     ) : (
                         beginSearchPromptDOM

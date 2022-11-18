@@ -86,6 +86,8 @@ interface IQueryItemProps {
     preview: IQueryPreview;
     searchString: string;
     environmentName: string;
+    displayLines: number;
+    displayPreview: boolean;
 }
 
 const GetSyntaxHighlightedQueryDOM = ({
@@ -95,9 +97,7 @@ const GetSyntaxHighlightedQueryDOM = ({
     displayPreview,
 }) => {
     const [isDisplayFull, setIsDisplayFull] = useState(false);
-    console.log(displayLines, '-- --- --- display Lines -- --- ---');
-    // if empty - show full query
-    const text = isDisplayFull
+    const text = isDisplayFull || displayPreview
         ? queryText
         : displayLines
         ? queryText.split('\n').slice(0, displayLines).join('\n')
@@ -110,14 +110,21 @@ const GetSyntaxHighlightedQueryDOM = ({
                 onClick={stopPropagation}
                 onContextMenuCapture={stopPropagation}
             />
-            {displayLines ? <div style={{ textAlign: "center" }} onClick={() => setIsDisplayFull((v) => !v)}>
-                {isDisplayFull ? 'Hide more' : 'Show more'}{' '}
-                <Icon
-                    className="ml8"
-                    name={isDisplayFull ? 'ChevronUp' : 'ChevronDown'}
-                    size={16}
-                />
-            </div> : ""}
+            {displayLines && !displayPreview ? (
+                <div
+                    className="flex-center"
+                    onClick={() => setIsDisplayFull((v) => !v)}
+                >
+                    {isDisplayFull ? 'Hide more' : 'Show more'}{' '}
+                    <Icon
+                        className="ml8"
+                        name={isDisplayFull ? 'ChevronUp' : 'ChevronDown'}
+                        size={16}
+                    />
+                </div>
+            ) : (
+                ''
+            )}
         </>
     );
 };
@@ -129,7 +136,6 @@ export const QueryItem: React.FunctionComponent<IQueryItemProps> = ({
     displayLines,
     displayPreview,
 }) => {
-    console.log(' -- --- -- is display preview -- --- --- ', displayPreview);
     const {
         author_uid: authorUid,
         created_at: createdAt,
